@@ -1,7 +1,6 @@
 package fasttext;
 
 import fasttext.store.InputStreamFastTextInput;
-import fasttext.store.OutputStreamFastTextOutput;
 
 import java.io.IOException;
 
@@ -176,22 +175,6 @@ public class Args {
 
   public void setUseMaxVocabularySize(boolean useMaxVocabularySize) {
     this.useMaxVocabularySize = useMaxVocabularySize;
-  }
-
-  public void save(OutputStreamFastTextOutput os) throws IOException {
-    os.writeInt(dim);
-    os.writeInt(ws);
-    os.writeInt(epoch);
-    os.writeInt(minCount);
-    os.writeInt(neg);
-    os.writeInt(wordNgrams);
-    os.writeInt(loss.getValue());
-    os.writeInt(model.getValue());
-    os.writeInt(bucket);
-    os.writeInt(minn);
-    os.writeInt(maxn);
-    os.writeInt(lrUpdateRate);
-    os.writeDouble(t);
   }
 
   public static Args load(InputStreamFastTextInput is) throws IOException {

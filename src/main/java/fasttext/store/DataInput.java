@@ -40,27 +40,27 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads a specified number of bytes into an array at the specified offset.
-   * @param b the array to read bytes into
+   *
+   * @param b      the array to read bytes into
    * @param offset the offset in the array to start storing bytes
-   * @param len the number of bytes to read
+   * @param len    the number of bytes to read
    */
-  public abstract void readBytes(byte[] b, int offset, int len)
-    throws IOException;
+  public abstract int readBytes(byte[] b, int offset, int len)
+          throws IOException;
 
   /**
    * Reads a specified number of bytes into an array at the
    * specified offset with control over whether the read
    * should be buffered (callers who have their own buffer
    * should pass in "false" for useBuffer).
-   * @param b the array to read bytes into
-   * @param offset the offset in the array to start storing bytes
-   * @param len the number of bytes to read
+   *
+   * @param b         the array to read bytes into
+   * @param offset    the offset in the array to start storing bytes
+   * @param len       the number of bytes to read
    * @param useBuffer set to false if the caller will handle
-   * buffering.
+   *                  buffering.
    */
-  public void readBytes(byte[] b, int offset, int len, boolean useBuffer)
-    throws IOException
-  {
+  public void readBytes(byte[] b, int offset, int len, boolean useBuffer) throws IOException {
     // Default to ignoring useBuffer entirely
     readBytes(b, offset, len);
   }
@@ -69,7 +69,7 @@ public abstract class DataInput implements Cloneable {
    * Reads two bytes and returns a short.
    */
   public short readShort() throws IOException {
-    return (short) (((readByte() & 0xFF) <<  8) |  (readByte() & 0xFF));
+    return (short) (((readByte() & 0xFF) << 8) | (readByte() & 0xFF));
   }
 
   /**
@@ -77,14 +77,14 @@ public abstract class DataInput implements Cloneable {
    */
   public int readInt() throws IOException {
     return ((readByte() & 0xFF) << 24) | ((readByte() & 0xFF) << 16)
-      | ((readByte() & 0xFF) <<  8) |  (readByte() & 0xFF);
+            | ((readByte() & 0xFF) << 8) | (readByte() & 0xFF);
   }
 
   /**
    * Reads eight bytes and returns a long.
    */
   public long readLong() throws IOException {
-    return (((long)readInt()) << 32) | (readInt() & 0xFFFFFFFFL);
+    return (((long) readInt()) << 32) | (readInt() & 0xFFFFFFFFL);
   }
 
   /**
@@ -106,8 +106,9 @@ public abstract class DataInput implements Cloneable {
    */
   public boolean readBoolean() throws IOException {
     int ch = readByte();
-    if (ch < 0)
+    if (ch < 0) {
       throw new EOFException();
+    }
     return (ch != 0);
   }
 
@@ -149,16 +150,17 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads a Map&lt;String,String&gt; previously written
+   *
    * @return An immutable map containing the written contents.
    */
-  public Map<String,String> readMapOfStrings() throws IOException {
+  public Map<String, String> readMapOfStrings() throws IOException {
     int count = readInt();
     if (count == 0) {
       return Collections.emptyMap();
     } else if (count == 1) {
       return Collections.singletonMap(readString(), readString());
     } else {
-      Map<String,String> map = count > 10 ? new HashMap<>() : new TreeMap<>();
+      Map<String, String> map = count > 10 ? new HashMap<>() : new TreeMap<>();
       for (int i = 0; i < count; i++) {
         final String key = readString();
         final String val = readString();
@@ -170,6 +172,7 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads a Set&lt;String&gt; previously written
+   *
    * @return An immutable set containing the written contents.
    */
   public Set<String> readSetOfStrings() throws IOException {

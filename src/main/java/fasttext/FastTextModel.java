@@ -1,5 +1,6 @@
 package fasttext;
 
+import com.google.common.base.Charsets;
 import com.google.common.primitives.UnsignedLong;
 import fasttext.store.InputStreamFastTextInput;
 
@@ -36,7 +37,7 @@ public class FastTextModel {
     public Vector getWordVector(String word) {
         final Vector vector = new Vector(args.getDimension());
         vector.zero();
-        final FastTextModel.Entry entry = words.get(word);
+        final Entry entry = words.get(word);
         List<Integer> ngrams = null;
         if (entry != null) {
             vector.addRow(wordData, entry.index);
@@ -78,7 +79,7 @@ public class FastTextModel {
      */
     public long hash(final String str) {
         int h = (int) 2166136261L;      // 0xffffffc5;
-        for (byte strByte : str.getBytes()) {
+        for (byte strByte : str.getBytes(Charsets.UTF_8)) {
             h = (h ^ strByte) * 16777619; // FNV-1a
         }
         return h & 0xffffffffL;
@@ -92,11 +93,11 @@ public class FastTextModel {
         for (int i = 0; i < word.length(); i++) {
             final StringBuilder ngram = new StringBuilder();
             if (!hasUTFContinuationCode(word.charAt(i))) {
-                for (int j = i, n = 1; j < word.length() && n <= args.getMaxn(); n++) {
+                for (int j = i, n = 1; j < word.length() && n <= args.getMaxN(); n++) {
                     do {
                         ngram.append(word.charAt(j++));
                     } while (j < word.length() && hasUTFContinuationCode(word.charAt(j)));
-                    if (n >= args.getMinn() && !(n == 1 && (i == 0 || j == word.length()))) {
+                    if (n >= args.getMinN() && !(n == 1 && (i == 0 || j == word.length()))) {
                         final UnsignedLong h = UnsignedLong.valueOf(hash(ngram.toString()));
                         ngrams.add(h.mod(UnsignedLong.valueOf(args.getBucketNumber())).intValue());
                     }
@@ -160,11 +161,10 @@ public class FastTextModel {
          * This is lazily loaded when an entry is accessed.
          * They are row indices into the ngram matrix.
          */
-        List<Integer> ngrams = null;
+        List<Integer> ngrams;
 
         public Entry(final int index) {
             this.index = index;
         }
     }
-
 }

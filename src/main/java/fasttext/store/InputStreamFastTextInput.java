@@ -10,11 +10,11 @@ public class InputStreamFastTextInput extends FastTextInput implements Closeable
 
   private final BufferedInputStream is;
 
-  public InputStreamFastTextInput(InputStream in, int bufferSize) {
+  public InputStreamFastTextInput(final InputStream in, final int bufferSize) {
     this.is = new BufferedInputStream(in, bufferSize);
   }
 
-  public InputStreamFastTextInput(InputStream in) {
+  public InputStreamFastTextInput(final InputStream in) {
     this.is = new BufferedInputStream(in);
   }
 
@@ -24,8 +24,8 @@ public class InputStreamFastTextInput extends FastTextInput implements Closeable
   }
 
   @Override
-  public void readBytes(byte[] b, int offset, int len) throws IOException {
-    is.read(b, offset, len);
+  public int readBytes(byte[] b, int offset, int len) throws IOException {
+    return is.read(b, offset, len);
   }
 
   @Override

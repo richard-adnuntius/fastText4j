@@ -7,25 +7,27 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Locale;
 
 /**
  * Java FastText implementation.
  */
 public class FastText {
 
-    public static int FASTTEXT_VERSION = 12; /* Version 1b */
-    public static int FASTTEXT_FILEFORMAT_MAGIC_INT = 793712314;
+    /**
+     * Version 1b.
+     */
+    private static final int VERSION = 12;
+    private static final int FILE_FORMAT_MAGIC_INT = 793712314;
 
-    private final static Logger logger = Logger.getLogger(FastText.class.getName());
+    private static final Logger LOG = Logger.getLogger(FastText.class);
 
     private static boolean checkModel(int magic, int version) {
-        if (magic != FASTTEXT_FILEFORMAT_MAGIC_INT) {
-            logger.error("Unhandled file format");
+        if (magic != FILE_FORMAT_MAGIC_INT) {
+            LOG.error("Unhandled file format");
             return false;
         }
-        if (version > FASTTEXT_VERSION) {
-            logger.error("Input model version (" + version + ") doesn't match current version (" + FASTTEXT_VERSION + ")");
+        if (version > VERSION) {
+            LOG.error("Input model version (" + version + ") doesn't match current version (" + VERSION + ")");
             return false;
         }
         return true;
@@ -33,16 +35,14 @@ public class FastText {
 
     /**
      * Load fastText model from file path.
-     * If the file is a directory, it tries to load a memory-mapped model.
-     * If it is a single file, it tries to open an in-memory fastText model from binary model.
      */
     public static FastTextModel loadModel(String filename) throws IOException {
         final File f = new File(filename);
-        System.out.println("Loading in-memory FastText model from:" + filename);
+        LOG.info("Loading in-memory FastText model from: " + filename);
         if (!f.canRead()) {
             throw new IllegalArgumentException("Model file cannot be opened for loading");
         }
-        try (InputStream is = Files.newInputStream(f.toPath())) {
+        try (final InputStream is = Files.newInputStream(f.toPath())) {
             return loadModel(is);
         }
     }
@@ -57,23 +57,18 @@ public class FastText {
             if (!checkModel(magic, version)) {
                 throw new IllegalArgumentException("Model file has wrong file format");
             }
-            long start = System.nanoTime();
-            System.out.println("Loading model arguments");
-            Args args = Args.load(is);
+            LOG.info("Loading model arguments");
+            final Args args = Args.load(is);
             if (version == 11) {
                 // backward compatibility: old supervised models do not use char ngrams.
                 if (args.getModel() == Args.ModelName.SUP) {
-                    args.setMaxn(0);
+                    args.setMaxN(0);
                 }
-                // backward compatibility: use max vocabulary size as word2intSize.
-                args.setUseMaxVocabularySize(true);
             }
-            System.out.println("Loading dictionary");
+            LOG.info("Loading model");
             final FastTextModel model = FastTextModel.load(args, is);
 
-            long end = System.nanoTime();
-            double took = (end - start) / 1000000000d;
-            System.out.println(String.format(Locale.ENGLISH, "FastText model loaded (%.3fs)", took));
+            LOG.info("FastText model loaded");
             return model;
         }
     }

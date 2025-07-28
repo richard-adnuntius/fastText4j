@@ -7,7 +7,7 @@ public class Vector {
   final int m;
   final float[] data;
 
-  public Vector(int size) {
+  public Vector(final int size) {
     this.m = size;
     this.data = new float[size];
   }
@@ -30,7 +30,7 @@ public class Vector {
     return (float) Math.sqrt(sum);
   }
 
-  public void mul(float a) {
+  public void mul(final float a) {
     for (int i = 0; i < m; i++) {
       data[i] *= a;
     }
@@ -44,41 +44,41 @@ public class Vector {
     return dist;
   }
 
-  public void addVector(Vector source) {
+  public void addVector(final Vector source) {
     Preconditions.checkArgument(source.size() == m);
-    for(int i = 0; i < m; i++) {
+    for (int i = 0; i < m; i++) {
       data[i] += source.at(i);
     }
   }
 
-  public void addVector(Vector source, float s) {
+  public void addVector(final Vector source, final float s) {
     Preconditions.checkArgument(source.size() == m);
-    for(int i = 0; i < m; i++) {
+    for (int i = 0; i < m; i++) {
       data[i] += s * source.at(i);
     }
   }
 
-  public void addRow(ReadableMatrix A, int i, float a) {
-    Preconditions.checkPositionIndex(i, A.m());
-    Preconditions.checkArgument(m == A.n());
-    for (int j = 0; j < A.n(); j++) {
-      data[j] += a * A.at(i, j);
+  public void addRow(final Matrix matrix, final int i, final float a) {
+    Preconditions.checkPositionIndex(i, matrix.m());
+    Preconditions.checkArgument(m == matrix.n());
+    for (int j = 0; j < matrix.n(); j++) {
+      data[j] += a * matrix.at(i, j);
     }
   }
 
-  public void addRow(Matrix A, int i) {
-    Preconditions.checkPositionIndex(i, A.m());
-    Preconditions.checkArgument(m == A.n());
-    for (int j = 0; j < A.n(); j++) {
-      data[j] += A.at(i, j);
+  public void addRow(final Matrix matrix, final int i) {
+    Preconditions.checkPositionIndex(i, matrix.m());
+    Preconditions.checkArgument(m == matrix.n());
+    for (int j = 0; j < matrix.n(); j++) {
+      data[j] += matrix.at(i, j);
     }
   }
 
-  public void mul(ReadableMatrix A, Vector vec) {
-    Preconditions.checkArgument(m == A.m());
-    Preconditions.checkArgument(A.n() == vec.size());
+  public void mul(final Matrix matrix, final Vector vector) {
+    Preconditions.checkArgument(m == matrix.m());
+    Preconditions.checkArgument(matrix.n() == vector.size());
     for (int i = 0; i < m; i++) {
-      data[i] = A.dotRow(vec, i);
+      data[i] = matrix.dotRow(vector, i);
     }
   }
 
@@ -94,40 +94,36 @@ public class Vector {
     return argmax;
   }
 
-  public void addAt(int i, float v) {
+  public void addAt(final int i, final float v) {
     Preconditions.checkPositionIndex(i, m);
     data[i] += v;
   }
 
-  public void set(int i, float v) {
+  public void set(final int i, final float v) {
     Preconditions.checkPositionIndex(i, m);
     data[i] = v;
   }
 
-  public float at(int i) {
+  public float at(final int i) {
     Preconditions.checkPositionIndex(i, m);
     return data[i];
   }
 
   @Override
   public String toString() {
-    StringBuilder builder = new StringBuilder();
+    final StringBuilder builder = new StringBuilder();
     builder.append("Vector(");
     builder.append("m=");
     builder.append(m);
     builder.append(", data=");
-    if (data != null) {
-      builder.append("[");
-      for (float d : data) {
-        builder.append(d).append(' ');
-      }
-      if (builder.length() > 1) {
-        builder.setLength(builder.length() - 1);
-      }
-      builder.append("]");
-    } else {
-      builder.append("null");
+    builder.append("[");
+    for (float d : data) {
+      builder.append(d).append(' ');
     }
+    if (builder.length() > 1) {
+      builder.setLength(builder.length() - 1);
+    }
+    builder.append("]");
 
     builder.append(")");
     return builder.toString();

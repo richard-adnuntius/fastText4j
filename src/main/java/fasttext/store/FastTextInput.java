@@ -20,7 +20,7 @@ public abstract class FastTextInput extends DataInput {
   @Override
   public int readInt() throws IOException {
     return (readByte() & 0xFF) | ((readByte() & 0xFF) <<  8)
-      | ((readByte() & 0xFF) << 16) | ((readByte() & 0xFF) << 24);
+            | ((readByte() & 0xFF) << 16) | ((readByte() & 0xFF) << 24);
   }
 
   /**
@@ -29,9 +29,9 @@ public abstract class FastTextInput extends DataInput {
   @Override
   public long readLong() throws IOException {
     return (readByte() & 0xFFL) | (readByte() & 0xFFL) << 8
-      | (readByte() & 0xFFL) << 16 | (readByte() & 0xFFL) << 24
-      | (readByte() & 0xFFL) << 32 | (readByte() & 0xFFL) << 40
-      | (readByte() & 0xFFL) << 48 | (readByte() & 0xFFL) << 56;
+            | (readByte() & 0xFFL) << 16 | (readByte() & 0xFFL) << 24
+            | (readByte() & 0xFFL) << 32 | (readByte() & 0xFFL) << 40
+            | (readByte() & 0xFFL) << 48 | (readByte() & 0xFFL) << 56;
   }
 
   /**
@@ -44,19 +44,19 @@ public abstract class FastTextInput extends DataInput {
       return null;
     }
     int i = -1;
-    StringBuilder sb = new StringBuilder();
-    int barrSize = 128;
-    byte[] barr = new byte[barrSize];
+    final StringBuilder sb = new StringBuilder();
+    final int numBytes = 128;
+    final byte[] bytes = new byte[numBytes];
     // ascii space, \n, \0
     while (b > -1 && b != 32 && b != 10 && b != 0) {
-      barr[++i] = (byte) b;
+      bytes[++i] = (byte) b;
       b = readByteAsInt();
-      if (i == barrSize - 1) {
-        sb.append(new String(barr));
+      if (i == numBytes - 1) {
+        sb.append(new String(bytes, StandardCharsets.UTF_8));
         i = -1;
       }
     }
-    sb.append(new String(barr, 0, i + 1, StandardCharsets.UTF_8));
+    sb.append(new String(bytes, 0, i + 1, StandardCharsets.UTF_8));
     return sb.toString();
   }
 

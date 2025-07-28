@@ -1,5 +1,6 @@
 package fasttext.store;
 
+import java.io.DataOutput;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -34,7 +35,6 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads and returns a single byte.
-   * @see DataOutput#writeByte(byte)
    */
   public abstract byte readByte() throws IOException;
 
@@ -43,7 +43,6 @@ public abstract class DataInput implements Cloneable {
    * @param b the array to read bytes into
    * @param offset the offset in the array to start storing bytes
    * @param len the number of bytes to read
-   * @see DataOutput#writeBytes(byte[],int)
    */
   public abstract void readBytes(byte[] b, int offset, int len)
     throws IOException;
@@ -58,7 +57,6 @@ public abstract class DataInput implements Cloneable {
    * @param len the number of bytes to read
    * @param useBuffer set to false if the caller will handle
    * buffering.
-   * @see DataOutput#writeBytes(byte[],int)
    */
   public void readBytes(byte[] b, int offset, int len, boolean useBuffer)
     throws IOException
@@ -69,7 +67,6 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads two bytes and returns a short.
-   * @see DataOutput#writeByte(byte)
    */
   public short readShort() throws IOException {
     return (short) (((readByte() & 0xFF) <<  8) |  (readByte() & 0xFF));
@@ -77,7 +74,6 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads four bytes and returns an int.
-   * @see DataOutput#writeInt(int)
    */
   public int readInt() throws IOException {
     return ((readByte() & 0xFF) << 24) | ((readByte() & 0xFF) << 16)
@@ -86,7 +82,6 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads eight bytes and returns a long.
-   * @see DataOutput#writeLong(long)
    */
   public long readLong() throws IOException {
     return (((long)readInt()) << 32) | (readInt() & 0xFFFFFFFFL);
@@ -94,7 +89,6 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads four bytes and returns a float.
-   *  @see DataOutput#writeFloat(float)
    */
   public float readFloat() throws IOException {
     return Float.intBitsToFloat(readInt());
@@ -102,7 +96,6 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads eight bytes and returns a double.
-   *  @see DataOutput#writeDouble(double)
    */
   public double readDouble() throws IOException {
     return Double.longBitsToDouble(readLong());
@@ -110,7 +103,6 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads a byte and returns a boolean.
-   *  @see DataOutput#writeBoolean(boolean)
    */
   public boolean readBoolean() throws IOException {
     int ch = readByte();
@@ -121,7 +113,6 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads a string.
-   * @see DataOutput#writeString(String)
    */
   public String readString() throws IOException {
     int length = readInt();
@@ -132,7 +123,6 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads a single byte to int
-   * @see DataOutput#writeIntAsByte(int)
    */
   public int readByteAsInt() throws IOException {
     return readByte() & 0xFF;
@@ -159,7 +149,6 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads a Map&lt;String,String&gt; previously written
-   * with {@link DataOutput#writeMapOfStrings(Map)}.
    * @return An immutable map containing the written contents.
    */
   public Map<String,String> readMapOfStrings() throws IOException {
@@ -181,7 +170,6 @@ public abstract class DataInput implements Cloneable {
 
   /**
    * Reads a Set&lt;String&gt; previously written
-   * with {@link DataOutput#writeSetOfStrings(Set)}.
    * @return An immutable set containing the written contents.
    */
   public Set<String> readSetOfStrings() throws IOException {

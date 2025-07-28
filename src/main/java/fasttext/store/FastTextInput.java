@@ -8,7 +8,6 @@ public abstract class FastTextInput extends DataInput {
 
   /**
    * Reads two bytes and returns a short.
-   * @see FastTextOutput#writeByte(byte)
    */
   @Override
   public short readShort() throws IOException {
@@ -17,7 +16,6 @@ public abstract class FastTextInput extends DataInput {
 
   /**
    * Reads four bytes written with low-order first and returns an int.
-   * @see FastTextOutput#writeInt(int)
    */
   @Override
   public int readInt() throws IOException {
@@ -27,7 +25,6 @@ public abstract class FastTextInput extends DataInput {
 
   /**
    * Reads eight bytes written with low-order first and returns a long.
-   * @see FastTextOutput#writeLong(long)
    */
   @Override
   public long readLong() throws IOException {
@@ -39,7 +36,6 @@ public abstract class FastTextInput extends DataInput {
 
   /**
    * Reads a string.
-   * @see FastTextOutput#writeString(String)
    */
   @Override
   public String readString() throws IOException {

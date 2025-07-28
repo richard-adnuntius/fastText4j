@@ -36,6 +36,14 @@ public class Vector {
     }
   }
 
+  public float dot(final Vector vector) {
+    float dist = 0;
+    for (int i = 0; i < data.length; i++) {
+      dist += vector.at(i) * data[i];
+    }
+    return dist;
+  }
+
   public void addVector(Vector source) {
     Preconditions.checkArgument(source.size() == m);
     for(int i = 0; i < m; i++) {
@@ -58,7 +66,7 @@ public class Vector {
     }
   }
 
-  public void addRow(ReadableMatrix A, int i) {
+  public void addRow(Matrix A, int i) {
     Preconditions.checkPositionIndex(i, A.m());
     Preconditions.checkArgument(m == A.n());
     for (int j = 0; j < A.n(); j++) {
@@ -66,20 +74,7 @@ public class Vector {
     }
   }
 
-  public void addRow(ReadableQMatrix A, int i) {
-    Preconditions.checkArgument(i >= 0);
-    A.addToVector(this, i);
-  }
-
   public void mul(ReadableMatrix A, Vector vec) {
-    Preconditions.checkArgument(m == A.m());
-    Preconditions.checkArgument(A.n() == vec.size());
-    for (int i = 0; i < m; i++) {
-      data[i] = A.dotRow(vec, i);
-    }
-  }
-
-  public void mul(ReadableQMatrix A, Vector vec) {
     Preconditions.checkArgument(m == A.m());
     Preconditions.checkArgument(A.n() == vec.size());
     for (int i = 0; i < m; i++) {
